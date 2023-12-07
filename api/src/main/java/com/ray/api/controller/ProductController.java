@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,5 +40,12 @@ public class ProductController {
                                                     .collect(Collectors.toList());
         
         return new ResponseEntity<>(returnDtos, HttpStatus.OK);
+    }
+    
+    // get product by id
+    @GetMapping("/{productId}")
+    public ResponseEntity getProductById(@PathVariable("productId") Long productId) {
+        Product product = productRepository.findById(productId).get();
+        return new ResponseEntity<>(new ProductReturnDto(product), HttpStatus.OK);
     }
 }
