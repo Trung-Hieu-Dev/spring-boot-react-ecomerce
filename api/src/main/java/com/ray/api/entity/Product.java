@@ -44,6 +44,7 @@ public class Product {
     
     @ManyToOne
     @JoinColumn(name = "category_id")
+//    @JsonIgnore // to remove field caused infinite recursion
     private ProductCategory category;
     
     public Product() {
