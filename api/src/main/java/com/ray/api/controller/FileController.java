@@ -1,6 +1,6 @@
 package com.ray.api.controller;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +39,9 @@ public class FileController {
         Path file = Paths.get("upload/image").resolve(fileName);
         Resource resource = new UrlResource(file.toUri());
         if (resource.exists() && resource.isReadable()) {
-            return new ResponseEntity<>(FileUtils.readFileToByteArray(resource.getFile()), HttpStatus.OK);
+            InputStream inputStream = resource.getInputStream();
+            byte[] fileBytes = IOUtils.toByteArray(inputStream);
+            return new ResponseEntity<>(fileBytes, HttpStatus.OK);
         } else {
             throw new RuntimeException("Could not find image");
         }
