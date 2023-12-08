@@ -54,18 +54,17 @@ const MaterialUISwitch = styled(Switch)(({theme}) => ({
 }));
 
 
-
 const Header = ({onSetDarkMode, darkMode}: Props) => {
     const changeDarkModeHandler = (event: any) => {
-        onSetDarkMode(event.target.checked)
-    }
+        onSetDarkMode(event.target.checked);
+    };
 
     return (
         <AppBar position="static" sx={{marginBottom: 4}}>
             <Toolbar>
                 <Typography variant="h6">My Shop</Typography>
                 <MaterialUISwitch sx={{marginLeft: "auto"}} checked={darkMode}
-                                 onChange={changeDarkModeHandler}/>
+                                  onChange={changeDarkModeHandler}/>
             </Toolbar>
         </AppBar>
     );

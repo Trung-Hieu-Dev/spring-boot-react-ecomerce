@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Paper, styled } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Product } from "../../model/Product";
 import ProductCard from "./ProductCard";
 
@@ -13,8 +13,8 @@ const ProductList = ({products}: Props) => {
             {
                 products.map((product: Product) =>
                     (
-                        <Grid item xs={12} md={4} lg={3}  key={product.id} >
-                            <ProductCard product={product} />
+                        <Grid item xs={12} md={4} lg={3} key={product.id}>
+                            <ProductCard product={product}/>
                         </Grid>
                     ),
                 )
