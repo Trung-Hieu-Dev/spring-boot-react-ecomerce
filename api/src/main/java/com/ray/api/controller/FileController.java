@@ -23,12 +23,18 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         String message;
-        try {
-            Files.copy(file.getInputStream(), Paths.get("upload/image").resolve(file.getOriginalFilename()));
-            message = "Upload file successfully " + file.getOriginalFilename();
-            return new ResponseEntity<>(message, HttpStatus.OK);
-        } catch (Exception e) {
-            message = "Could not upload file " + file.getOriginalFilename();
+        if (file.getOriginalFilename() != null) {
+            try {
+                Files.copy(file.getInputStream(), Paths.get("upload/image").resolve(file.getOriginalFilename()));
+                message = "Upload file successfully " + file.getOriginalFilename();
+                return new ResponseEntity<>(message, HttpStatus.OK);
+                
+            } catch (Exception e) {
+                message = "Could not upload file " + file.getOriginalFilename();
+                return new ResponseEntity<>(message, HttpStatus.EXPECTATION_FAILED);
+            }
+        } else {
+            message = "File " + file.getOriginalFilename() + " is not an image or empty!";
             return new ResponseEntity<>(message, HttpStatus.EXPECTATION_FAILED);
         }
     }
