@@ -39,7 +39,7 @@ public class FileController {
         }
     }
     
-    @GetMapping(value = "/image/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/image/{fileName}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
     public ResponseEntity<byte[]> getFile(@PathVariable String fileName) throws IOException {
         Path file = Paths.get("upload/image").resolve(fileName);
