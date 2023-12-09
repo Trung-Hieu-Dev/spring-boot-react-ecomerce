@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
-import { blue, indigo } from "@mui/material/colors";
+import { indigo } from "@mui/material/colors";
 
 interface Props {
     onSetDarkMode: (isDark: boolean) => void,
