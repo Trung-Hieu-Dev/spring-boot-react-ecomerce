@@ -2,6 +2,7 @@ import React from "react";
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
 import { Product } from "../../model/Product";
 import { red } from "@mui/material/colors";
+import { Link } from "react-router-dom";
 
 interface Props {
     product: Product,
@@ -36,7 +37,13 @@ const ProductCard = ({product}: Props) => {
             </CardContent>
             <CardActions>
                 <Button size="small">Add To Cart</Button>
-                <Button size="small">View</Button>
+                <Button
+                    size="small"
+                    component={Link}
+                    to={`/catalog/${product.id}`}
+                >
+                    View
+                </Button>
             </CardActions>
         </Card>
     );

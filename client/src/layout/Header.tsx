@@ -1,5 +1,19 @@
 import React from "react";
-import { AppBar, styled, Switch, Toolbar, Typography } from "@mui/material";
+import {
+    AppBar,
+    Badge,
+    BadgeProps, Box,
+    IconButton,
+    List,
+    ListItem,
+    styled,
+    Switch,
+    Toolbar,
+    Typography,
+} from "@mui/material";
+import { NavLink } from "react-router-dom";
+import { ShoppingCart } from "@mui/icons-material";
+import { blue, indigo } from "@mui/material/colors";
 
 interface Props {
     onSetDarkMode: (isDark: boolean) => void,
@@ -53,6 +67,37 @@ const MaterialUISwitch = styled(Switch)(({theme}) => ({
     },
 }));
 
+const StyledBadge = styled(Badge)<BadgeProps>(({theme}) => ({
+    "& .MuiBadge-badge": {
+        right: -3,
+        top: 5,
+        border: `2px solid ${theme.palette.background.paper}`,
+        padding: "0 4px",
+    },
+}));
+
+const navStyled = {
+    color: "inherit",
+    '&:hover': {
+        color: indigo[900]
+    },
+    '&.active': {
+        color: 'text.primary'
+    }
+}
+
+const midLinks = [
+    {title: "catalog", path: "/catalog"},
+    {title: "about", path: "/about"},
+    {title: "contact", path: "/contact"},
+    {title: "upload", path: "/upload"},
+];
+
+const rightLinks = [
+    {title: "login", path: "/login"},
+    {title: "register", path: "/register"},
+];
+
 
 const Header = ({onSetDarkMode, darkMode}: Props) => {
     const changeDarkModeHandler = (event: any) => {
@@ -61,9 +106,53 @@ const Header = ({onSetDarkMode, darkMode}: Props) => {
 
     return (
         <AppBar position="static" sx={{marginBottom: 4}}>
-            <Toolbar>
-                <Typography variant="h6">My Shop</Typography>
-                <MaterialUISwitch sx={{marginLeft: "auto"}} checked={darkMode}
+            <Toolbar sx={{display: "flex", alignItems: 'center', justifyContent: 'space-between'}}>
+                <Typography
+                    variant="h6"
+                    component={NavLink} to="/"
+                    sx={{textDecoration: "none", color: "inherit"}}
+                >
+                    My Shop
+                </Typography>
+
+                <List sx={{display: "flex"}}>
+                    {midLinks.map(({title, path}) => (
+                        <ListItem
+                            key={title}
+                            component={NavLink}
+                            to={path}
+                            sx={navStyled}>
+                            <Typography variant="h6">
+                                {title.toUpperCase()}
+                            </Typography>
+                        </ListItem>
+                    ))}
+                </List>
+
+                <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <IconButton size="large" sx={{color: "inherit"}}>
+                        <StyledBadge badgeContent={4} color="secondary">
+                            <ShoppingCart/>
+                        </StyledBadge>
+                    </IconButton>
+
+                    <List sx={{display: "flex"}}>
+                        {rightLinks.map(({title, path}) => (
+                            <ListItem
+                                key={title}
+                                component={NavLink}
+                                to={path}
+                                sx={navStyled}
+                            >
+                                <Typography variant="h6">
+                                    {title.toUpperCase()}
+                                </Typography>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Box>
+
+                <MaterialUISwitch checked={darkMode}
                                   onChange={changeDarkModeHandler}/>
             </Toolbar>
         </AppBar>
