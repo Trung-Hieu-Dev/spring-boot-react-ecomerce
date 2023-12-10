@@ -10,7 +10,7 @@ const ProductDetail = () => {
     const [product, setProduct] = useState<Product | null>();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/products/${params.productId}`)
+        axios.get(`/products/${params.productId}`)
             .then(response => {
                     setProduct(response.data);
             })
@@ -27,7 +27,7 @@ const ProductDetail = () => {
     return (
         <Grid container spacing={2}>
             <Grid item xs={4}>
-                <img src={`http://localhost:8080/api/file/image/${product?.imageUrl}`} alt={product?.name}
+                <img src={`${process.env.REACT_APP_BASE_URL}/file/image/${product?.imageUrl}`} alt={product?.name}
                      style={{width: "100%"}}/>
             </Grid>
             <Grid item xs={8}>
