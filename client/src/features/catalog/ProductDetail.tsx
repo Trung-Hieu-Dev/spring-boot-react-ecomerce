@@ -3,6 +3,7 @@ import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, T
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Product } from "../../model/Product";
+import LoadingComponent from "../../layout/LoadingComponent";
 
 const ProductDetail = () => {
     let params = useParams();
@@ -10,7 +11,7 @@ const ProductDetail = () => {
     const [product, setProduct] = useState<Product | null>();
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/products/${params.productId}`)
+        axios.get(`/products/${params.productId}`)
             .then(response => {
                     setProduct(response.data);
             })
@@ -20,14 +21,14 @@ const ProductDetail = () => {
             .finally(() => setLoading(false));
     }, [params.productId]);
 
-    if (loading) return <h3>Loading</h3>
+    if (loading) return <LoadingComponent />
 
     if (!product) return <h3>No product found</h3>
 
     return (
         <Grid container spacing={2}>
             <Grid item xs={4}>
-                <img src={`http://localhost:8080/api/file/image/${product?.imageUrl}`} alt={product?.name}
+                <img src={`${process.env.REACT_APP_BASE_URL}/file/image/${product?.imageUrl}`} alt={product?.name}
                      style={{width: "100%"}}/>
             </Grid>
             <Grid item xs={8}>
