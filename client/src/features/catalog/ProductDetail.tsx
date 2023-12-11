@@ -3,6 +3,7 @@ import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, T
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Product } from "../../model/Product";
+import LoadingComponent from "../../layout/LoadingComponent";
 
 const ProductDetail = () => {
     let params = useParams();
@@ -20,7 +21,7 @@ const ProductDetail = () => {
             .finally(() => setLoading(false));
     }, [params.productId]);
 
-    if (loading) return <h3>Loading</h3>
+    if (loading) return <LoadingComponent />
 
     if (!product) return <h3>No product found</h3>
 
