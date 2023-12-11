@@ -1,5 +1,6 @@
 package com.ray.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -46,6 +47,11 @@ public class Product {
     @JoinColumn(name = "category_id")
 //    @JsonIgnore // to remove field caused infinite recursion
     private ProductCategory category;
+    
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    @JsonIgnore
+    private BasketItem basketItem;
     
     public Product() {
     }
