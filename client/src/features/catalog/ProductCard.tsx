@@ -3,12 +3,19 @@ import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, 
 import { Product } from "../../model/Product";
 import { red } from "@mui/material/colors";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 interface Props {
     product: Product,
 }
 
 const ProductCard = ({product}: Props) => {
+    const handleAddToCart = (productId: number) => {
+        axios.post(`/baskets?productId=${productId}&quantity=${1}`, {})
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+    }
+
     return (
         <Card>
             <CardHeader
@@ -36,7 +43,9 @@ const ProductCard = ({product}: Props) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button size="small">Add To Cart</Button>
+                <Button size="small" onClick={() => handleAddToCart(product.id)}>
+                    Add To Cart
+                </Button>
                 <Button
                     size="small"
                     component={Link}

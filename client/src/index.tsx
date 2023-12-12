@@ -7,7 +7,8 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL; // set base url
+axios.defaults.withCredentials = true // allow to work with cookie
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
