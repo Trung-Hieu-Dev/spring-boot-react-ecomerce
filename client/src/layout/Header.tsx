@@ -11,7 +11,7 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
 import { indigo } from "@mui/material/colors";
 
@@ -130,7 +130,7 @@ const Header = ({onSetDarkMode, darkMode}: Props) => {
                 </List>
 
                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                    <IconButton size="large" sx={{color: "inherit"}}>
+                    <IconButton size="large" sx={{color: "inherit"}} component={Link} to='/basket'>
                         <StyledBadge badgeContent={4} color="secondary">
                             <ShoppingCart/>
                         </StyledBadge>

@@ -12,6 +12,7 @@ import Uploader from "../features/upload/Uploader";
 import { ToastContainer } from "react-toastify";
 import AxiosInterceptor from "../interceptor/AxiosInterceptor";
 import NotFound from "../features/error/NotFound";
+import BasketPage from "../features/basket/BasketPage";
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -36,7 +37,9 @@ function App() {
                         <Route path='about' element={<AboutPage />}/>
                         <Route path='/contact' element={<ContactPage />}/>
                         <Route path='/upload' element={<Uploader />}/>
+                        <Route path='/basket' element={<BasketPage />}/>
                         <Route path='/not-found' element={<NotFound />}/>
+                        <Route path='*' element={<NotFound />}/>
                     </Routes>
                 </Container>
             </AxiosInterceptor>
