@@ -16,7 +16,11 @@ import axios from "axios";
 
 const BasketPage = () => {
     const {basket, setBasket, removeItem} = useContext(StoreContext);
-    const [loading, setLoading] = useState<boolean>();
+    const [status, setStatus] = useState<any>({
+        loading: false,
+        name: '',
+        id: null,
+    });
 
     useEffect(() => {
         axios.get('/baskets')
@@ -24,20 +28,20 @@ const BasketPage = () => {
             .catch(err => console.log(err))
     }, [setBasket, basket]);
 
-    const handleAddItem = (productId: number) => {
-        setLoading(true);
+    const handleAddItem = (productId: number, name: string) => {
+        setStatus({loading: true, name: name, id: productId});
         axios.post(`/baskets?productId=${productId}&quantity=${1}`)
             .then(res => setBasket(res.data))
             .catch(err => console.log(err))
-            .finally(() => setLoading(false));
+            .finally(() => setStatus({loading: false, name: name,  id: productId}));
     }
 
-    const handleRemoveItem = (productId: number, quantity: number) => {
-        setLoading(true);
+    const handleRemoveItem = (productId: number, quantity: number, name: string) => {
+        setStatus({loading: true, name: name, id: productId});
         axios.delete(`/baskets?productId=${productId}&quantity=${quantity}`)
             .then(() => removeItem(productId, quantity))
             .catch(err => console.log(err))
-            .finally(() => setLoading(false));
+            .finally(() => setStatus({loading: false, name: name,  id: productId}));
     }
 
     if (!basket) return <Typography variant='h3'>No basket found..</Typography>
@@ -66,19 +70,19 @@ const BasketPage = () => {
                             <TableCell align="right">${row.unitPrice.toFixed(2)}</TableCell>
                             <TableCell align="center">
                                 <LoadingButton
-                                    loading={loading}
+                                    loading={status.loading && status.name === 'add' && status.id === row.productId}
                                     color='secondary'
                                     sx={{minWidth: 0}}
-                                    onClick={() => handleAddItem(row.productId)}
+                                    onClick={() => handleAddItem(row.productId, 'add')}
                                 >
                                     <AddCircle />
                                 </LoadingButton>
                                 {row.quantity}
                                 <LoadingButton
-                                    loading={loading}
+                                    loading={status.loading && status.name === 'subtract'  && status.id === row.productId}
                                     color='error'
                                     sx={{minWidth: 0}}
-                                    onClick={() => handleRemoveItem(row.productId, 1)}
+                                    onClick={() => handleRemoveItem(row.productId, 1, 'subtract')}
                                 >
                                     <RemoveCircle />
                                 </LoadingButton>
@@ -86,9 +90,9 @@ const BasketPage = () => {
                             <TableCell align="right">${(row.unitPrice * row.quantity).toFixed(2)}</TableCell>
                             <TableCell align="right">
                                 <LoadingButton
-                                    loading={loading}
+                                    loading={status.loading && status.name === 'remove' && status.id === row.productId}
                                     color={"warning"}
-                                    onClick={() => handleRemoveItem(row.productId, row.quantity)}
+                                    onClick={() => handleRemoveItem(row.productId, row.quantity, 'remove')}
                                 >
                                     <Delete />
                                 </LoadingButton>

@@ -91,7 +91,7 @@ public class BasketController {
                            .filter(item -> item.getProduct().getId().equals(productId))
                            .findAny().orElse(null);
         if (existingBasketItem == null)
-            throw new NoResultException("There is product in basket");
+            throw new NoResultException("There is not product in basket");
         
         int newQuantity = existingBasketItem.getQuantity() - quantity;
         existingBasketItem.setQuantity(newQuantity);
