@@ -1,25 +1,70 @@
-import React, { useEffect, useState } from "react";
-import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import {
+    Divider,
+    Grid,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Product } from "../../model/Product";
 import LoadingComponent from "../../layout/LoadingComponent";
+import { LoadingButton } from "@mui/lab";
+import { StoreContext } from "../../context/StoreContext";
 
 const ProductDetail = () => {
     let params = useParams();
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState<Product | null>();
 
+    const {basket, setBasket, removeItem} = useContext(StoreContext);
+    const basketItem = basket?.basketItems.find(item => item.productId === product?.id);
+    const [quantity, setQuantity] = useState<number>(0);
+    const [submitting, setSubmitting] = useState(false);
+
     useEffect(() => {
         axios.get(`/products/${params.productId}`)
             .then(response => {
                     setProduct(response.data);
+                    if (basketItem) {
+                       setQuantity(basketItem!.quantity);
+                    }
             })
             .catch(error => {
                 console.log(error);
             })
             .finally(() => setLoading(false));
-    }, [params.productId]);
+    }, [basket, basketItem, params.productId]);
+
+    const handleInputChange = (event: any) => {
+        if (quantity > 0) {
+            setQuantity(event.target.value)
+        }
+    }
+
+    const handleUpdateCart = () => {
+        setSubmitting(true);
+        let updatedQuantity: number;
+        if (!basket || basketItem!.quantity < quantity) {
+            updatedQuantity = quantity - basketItem!.quantity;
+            axios.post(`/baskets?productId=${product?.id}&quantity=${updatedQuantity}`)
+                .then(res => setBasket(res.data))
+                .catch(err => console.log(err))
+                .finally(() => setSubmitting(false));
+        } else if (!basket || basketItem!.quantity > quantity) {
+            updatedQuantity = basketItem!.quantity - quantity;
+            axios.delete(`/baskets?productId=${product?.id}&quantity=${updatedQuantity}`)
+                .then(res => removeItem(product?.id!, updatedQuantity))
+                .catch(err => console.log(err))
+                .finally(() => setSubmitting(false));
+        }
+    }
+
 
     if (loading) return <LoadingComponent />
 
@@ -65,6 +110,33 @@ const ProductDetail = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+
+                <Grid container spacing={2} mt={4}>
+                    <Grid item xs={6}>
+                        <TextField
+                            variant='outlined'
+                            type='number'
+                            label='Quantity in Cart'
+                            fullWidth
+                            value={quantity}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <LoadingButton
+                            disabled={basketItem?.quantity === quantity}
+                            loading={submitting}
+                            color='primary'
+                            size='large'
+                            fullWidth
+                            variant='contained'
+                            sx={{height: '55px'}}
+                            onClick={handleUpdateCart}
+                        >
+                            {basketItem ? 'Update quantity' : 'Add To Cart'}
+                        </LoadingButton>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     );
