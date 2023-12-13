@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { Basket } from "../../model/Basket";
-import axios from "axios";
-import LoadingComponent from "../../layout/LoadingComponent";
+import React, { useContext } from "react";
 import {
     IconButton,
     Paper,
@@ -14,37 +11,10 @@ import {
     Typography,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+import { StoreContext } from "../../context/StoreContext";
 
 const BasketPage = () => {
-    const [basket, setBasket] = useState<Basket | null>();
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        axios.get(`/baskets`)
-            .then(res => setBasket(res.data))
-            .catch(err => console.log(err))
-            .finally(() => setLoading(false));
-    }, []);
-
-    if (loading) return <LoadingComponent />
+    const {basket} = useContext(StoreContext);
 
     if (!basket) return <Typography variant='h3'>No basket found..</Typography>
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     AppBar,
     Badge,
@@ -14,6 +14,7 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
 import { indigo } from "@mui/material/colors";
+import { StoreContext } from "../context/StoreContext";
 
 interface Props {
     onSetDarkMode: (isDark: boolean) => void,
@@ -100,6 +101,12 @@ const rightLinks = [
 
 
 const Header = ({onSetDarkMode, darkMode}: Props) => {
+    const {basket} = useContext(StoreContext);
+
+    const countItem = basket?.basketItems.reduce(
+        (sum, item) => sum + item.quantity, 0
+    );
+
     const changeDarkModeHandler = (event: any) => {
         onSetDarkMode(event.target.checked);
     };
@@ -131,7 +138,7 @@ const Header = ({onSetDarkMode, darkMode}: Props) => {
 
                 <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <IconButton size="large" sx={{color: "inherit"}} component={Link} to='/basket'>
-                        <StyledBadge badgeContent={4} color="secondary">
+                        <StyledBadge badgeContent={countItem} color="secondary">
                             <ShoppingCart/>
                         </StyledBadge>
                     </IconButton>

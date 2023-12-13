@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./App.css";
 import Catalog from "../features/catalog/Catalog";
 import Header from "./Header";
@@ -13,15 +13,34 @@ import { ToastContainer } from "react-toastify";
 import AxiosInterceptor from "../interceptor/AxiosInterceptor";
 import NotFound from "../features/error/NotFound";
 import BasketPage from "../features/basket/BasketPage";
+import { getCookie } from "../util/util";
+import { StoreContext } from "../context/StoreContext";
+import axios, { AxiosResponse } from "axios";
+import LoadingComponent from "./LoadingComponent";
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
+    const {setBasket} = useContext(StoreContext);
+    const [loading, setLoading] = useState<boolean>();
 
     const theme = createTheme({
         palette: {
             mode: darkMode ? "dark" : "light",
         },
     });
+
+    useEffect(() => {
+        const buyerId = getCookie('buyerId');
+        if (buyerId) {
+            setLoading(true);
+            axios.get('/baskets')
+                .then((res:AxiosResponse) => setBasket(res.data))
+                .catch(err => console.log(err))
+                .finally(() => setLoading(false));
+        }
+    }, [setBasket]);
+
+    if (loading) return <LoadingComponent />
 
     return (
         <ThemeProvider theme={theme}>

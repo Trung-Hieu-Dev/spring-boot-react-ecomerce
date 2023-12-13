@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
 import { Product } from "../../model/Product";
 import { red } from "@mui/material/colors";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { LoadingButton } from "@mui/lab";
+import { StoreContext } from "../../context/StoreContext";
 
 interface Props {
     product: Product,
 }
 
 const ProductCard = ({product}: Props) => {
+    const {setBasket} = useContext(StoreContext);
     const [loading, setLoading] = useState(false);
     const handleAddToCart = (productId: number) => {
         setLoading(true);
         axios.post(`/baskets?productId=${productId}&quantity=${1}`, {})
-            .then(res => console.log(res))
+            .then(res => setBasket(res.data))
             .catch(err => console.log(err))
             .finally(() => setLoading(false))
     }

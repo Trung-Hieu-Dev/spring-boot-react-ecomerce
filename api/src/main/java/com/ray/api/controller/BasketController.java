@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.NoResultException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -105,15 +106,18 @@ public class BasketController {
     }
     
     private ResponseEntity<BasketDto> returnBasketDto(Basket returnBasket) {
-        List<BasketItemDto> basketItemDtoList = returnBasket.getBasketItems().stream().map(item -> new BasketItemDto(
-                item.getProduct().getId(),
-                item.getProduct().getName(),
-                item.getProduct().getUnitPrice(),
-                item.getProduct().getImageUrl(),
-                item.getProduct().getBrand(),
-                item.getProduct().getCategory().getCategoryName(),
-                item.getQuantity()
-        )).collect(Collectors.toList());
+        List<BasketItemDto> basketItemDtoList = returnBasket.getBasketItems().stream()
+                                                            .map(item -> new BasketItemDto(
+                                                                    item.getProduct().getId(),
+                                                                    item.getProduct().getName(),
+                                                                    item.getProduct().getUnitPrice(),
+                                                                    item.getProduct().getImageUrl(),
+                                                                    item.getProduct().getBrand(),
+                                                                    item.getProduct().getCategory().getCategoryName(),
+                                                                    item.getQuantity()
+                                                            ))
+                                                            .sorted(Comparator.comparingLong(BasketItemDto::getProductId))
+                                                            .collect(Collectors.toList());
         
         BasketDto basketDto = new BasketDto();
         basketDto.setBasketItems(basketItemDtoList);

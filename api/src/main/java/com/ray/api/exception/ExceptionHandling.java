@@ -38,13 +38,13 @@ public class ExceptionHandling {
     // handle no basket
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> noResultException(Exception ex) {
-        return createHttpResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return createHttpResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
     
     // handle no buyerId
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<HttpResponse> noSuchElementException(Exception ex) {
-        return createHttpResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return createHttpResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
     
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
