@@ -10,7 +10,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/buggy")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000"}, allowCredentials = "true")
 public class BuggyController {
     @PostMapping("/validate-error")
     public ResponseEntity<Buggy> creatValidationError(@Valid @RequestBody Buggy buggy) {

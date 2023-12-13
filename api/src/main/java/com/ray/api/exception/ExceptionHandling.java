@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.persistence.NoResultException;
+import java.util.NoSuchElementException;
+
 @RestControllerAdvice
 public class ExceptionHandling {
     // Handle 404 error
@@ -30,6 +33,18 @@ public class ExceptionHandling {
         }
         
         return createHttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+    
+    // handle no basket
+    @ExceptionHandler(NoResultException.class)
+    public ResponseEntity<HttpResponse> noResultException(Exception ex) {
+        return createHttpResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+    
+    // handle no buyerId
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<HttpResponse> noSuchElementException(Exception ex) {
+        return createHttpResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
     
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {

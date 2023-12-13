@@ -24,7 +24,7 @@ public class ProductReturnDto {
     public ProductReturnDto(Product product) {
         this.id = product.getId();
         this.name = product.getName();
-        this.description = product.getName();
+        this.description = product.getDescription();
         this.unitPrice = product.getUnitPrice();
         this.imageUrl = product.getImageUrl();
         this.unitsInStock = product.getUnitsInStock();
