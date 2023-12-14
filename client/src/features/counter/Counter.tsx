@@ -14,25 +14,27 @@ const Counter = () => {
                 <button
                     className={styles.button}
                     onClick={() => dispatch(decrement())}
-                >-</button>
+                >-
+                </button>
 
                 <span className={styles.value}>{count}</span>
 
                 <button
                     className={styles.button}
                     onClick={() => dispatch(increment())}
-                >+</button>
-
-                <div className={styles.row}>
-                   <input className={styles.textbox}
-                          value={amount}
-                          onChange={(event) => setAmount(+event.target.value)}
-                   />
-                    <button
-                        className={styles.button}
-                        onClick={() => dispatch(incrementByAmount(amount))}
-                    >Add amount</button>
-                </div>
+                >+
+                </button>
+            </div>
+            <div className={styles.row}>
+                <input className={styles.textbox}
+                       value={amount}
+                       onChange={(event) => setAmount(+event.target.value)}
+                />
+                <button
+                    className={styles.button}
+                    onClick={() => dispatch(incrementByAmount(amount))}
+                >Add amount
+                </button>
             </div>
         </>
 
