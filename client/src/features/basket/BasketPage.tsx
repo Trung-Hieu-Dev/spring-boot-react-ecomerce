@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+    Button,
     Grid,
     Paper,
     Table,
@@ -15,6 +16,7 @@ import { StoreContext } from "../../context/StoreContext";
 import { LoadingButton } from "@mui/lab";
 import axios from "axios";
 import BasketSummary from "./BasketSummary";
+import { Link } from "react-router-dom";
 
 const BasketPage = () => {
     const {basket, setBasket, removeItem} = useContext(StoreContext);
@@ -110,6 +112,15 @@ const BasketPage = () => {
                 <Grid item xs={6}></Grid>
                 <Grid item xs={6}>
                     <BasketSummary />
+                    <Button
+                        component={Link}
+                        to='/checkout'
+                        variant='contained'
+                        size='large'
+                        fullWidth
+                    >
+                        Checkout
+                    </Button>
                 </Grid>
             </Grid>
         </>

@@ -17,6 +17,7 @@ import { getCookie } from "../util/util";
 import { StoreContext } from "../context/StoreContext";
 import axios, { AxiosResponse } from "axios";
 import LoadingComponent from "./LoadingComponent";
+import CheckoutPage from "../features/checkout/CheckoutPage";
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -52,12 +53,13 @@ function App() {
                     <Routes>
                         <Route path='/' element={<HomePage />}/>
                         <Route path='catalog' element={<Catalog />}/>
-                        <Route path='/catalog/:productId' element={<ProductDetail />}/>
+                        <Route path='catalog/:productId' element={<ProductDetail />}/>
                         <Route path='about' element={<AboutPage />}/>
-                        <Route path='/contact' element={<ContactPage />}/>
-                        <Route path='/upload' element={<Uploader />}/>
-                        <Route path='/basket' element={<BasketPage />}/>
-                        <Route path='/not-found' element={<NotFound />}/>
+                        <Route path='contact' element={<ContactPage />}/>
+                        <Route path='upload' element={<Uploader />}/>
+                        <Route path='basket' element={<BasketPage />}/>
+                        <Route path='not-found' element={<NotFound />}/>
+                        <Route path='checkout' element={<CheckoutPage />}/>
                         <Route path='*' element={<NotFound />}/>
                     </Routes>
                 </Container>
