@@ -36,6 +36,9 @@
     border-radius: 2px;
     transition: all 0.15s;
 }
+.button:disabled {
+    background-color: rgba(52, 51, 51, 0.92);
+}
 
 .textbox {
     font-size: 32px;
@@ -73,7 +76,7 @@
 }
 
 .asyncButton:active:after {
-    width: 0%;
+    width: 0;
     opacity: 1;
     transition: 0s;
 }
