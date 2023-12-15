@@ -63,7 +63,7 @@ const ProductCard = ({product}: Props) => {
             </CardContent>
             <CardActions>
                 <LoadingButton
-                    loading={status.includes('pending' + product.id)}
+                    loading={status.includes('pendingAdd' + product.id)}
                     size="small"
                     // onClick={() => handleAddToCart(product.id)} // context
                     onClick={() => store.dispatch(addBasketItemThunk({productId: product?.id}))}

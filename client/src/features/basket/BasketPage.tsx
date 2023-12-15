@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     Button,
     Grid,
@@ -14,29 +14,34 @@ import {
 import { AddCircle, Delete, RemoveCircle } from "@mui/icons-material";
 // import { StoreContext } from "../../context/StoreContext";
 import { LoadingButton } from "@mui/lab";
-import axios from "axios";
+// import axios from "axios";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { store } from "../../store";
-import { removeItemReducer, setBasketReducer } from "./BasketSlice";
+import { addBasketItemThunk, removeBasketItemThunk } from "./BasketSlice";
 
 const BasketPage = () => {
-    // const {basket, setBasket, removeItem} = useContext(StoreContext); // context
-    const {basket} = useSelector((state: any) => state.basket);
+    const {basket, status} = useSelector((state: any) => state.basket);
+
+
+    /**
+     *  using context and redux tool kit
+
+     const {basket, setBasket, removeItem} = useContext(StoreContext); // context
+
+     useEffect(() => {
+         axios.get('/baskets')
+             // .then(res => setBasket(res.data)) // context
+             .then(res => store.dispatch(setBasketReducer(res.data)))
+             .catch(err => console.log(err))
+     }, [basket]);
 
     const [status, setStatus] = useState<any>({
         loading: false,
         name: '',
         id: null,
     });
-
-    useEffect(() => {
-        axios.get('/baskets')
-            // .then(res => setBasket(res.data)) // context
-            .then(res => store.dispatch(setBasketReducer(res.data)))
-            .catch(err => console.log(err))
-    }, [basket]);
 
     const handleAddItem = (productId: number, name: string) => {
         setStatus({loading: true, name: name, id: productId});
@@ -55,6 +60,8 @@ const BasketPage = () => {
             .catch(err => console.log(err))
             .finally(() => setStatus({loading: false, name: name,  id: productId}));
     }
+
+     */
 
     if (!basket) return <Typography variant='h3'>No basket found..</Typography>
 
@@ -85,19 +92,27 @@ const BasketPage = () => {
                                 <TableCell align="right">${row.unitPrice.toFixed(2)}</TableCell>
                                 <TableCell align="center">
                                     <LoadingButton
-                                        loading={status.loading && status.name === 'add' && status.id === row.productId}
+                                        loading={status === 'pendingAdd' + row.productId}
                                         color='secondary'
                                         sx={{minWidth: 0}}
-                                        onClick={() => handleAddItem(row.productId, 'add')}
+                                        // onClick={() => handleAddItem(row.productId, 'add')} // context
+                                        onClick={() => store.dispatch(addBasketItemThunk({
+                                            productId: row.productId,
+                                            quantity: 1
+                                        }))}
                                     >
                                         <AddCircle />
                                     </LoadingButton>
                                     {row.quantity}
                                     <LoadingButton
-                                        loading={status.loading && status.name === 'subtract'  && status.id === row.productId}
+                                        loading={status === 'pendingRemove' + row.productId}
                                         color='error'
                                         sx={{minWidth: 0}}
-                                        onClick={() => handleRemoveItem(row.productId, 1, 'subtract')}
+                                        // onClick={() => handleRemoveItem(row.productId, 1, 'subtract')} // context
+                                        onClick={() => store.dispatch(removeBasketItemThunk({
+                                            productId: row.productId,
+                                            quantity: 1
+                                        }))}
                                     >
                                         <RemoveCircle />
                                     </LoadingButton>
@@ -105,9 +120,13 @@ const BasketPage = () => {
                                 <TableCell align="right">${(row.unitPrice * row.quantity).toFixed(2)}</TableCell>
                                 <TableCell align="right">
                                     <LoadingButton
-                                        loading={status.loading && status.name === 'remove' && status.id === row.productId}
+                                        loading={status === 'pendingRemoveAll' + row.productId}
                                         color={"warning"}
-                                        onClick={() => handleRemoveItem(row.productId, row.quantity, 'remove')}
+                                        // onClick={() => handleRemoveItem(row.productId, row.quantity, 'remove')} // context
+                                        onClick={() => store.dispatch(removeBasketItemThunk({
+                                            productId: row.productId,
+                                            quantity: +row.quantity
+                                        }))}
                                     >
                                         <Delete />
                                     </LoadingButton>
