@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material";
 import { Product } from "../../model/Product";
 import { red } from "@mui/material/colors";
 import { Link } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { LoadingButton } from "@mui/lab";
 // import { StoreContext } from "../../context/StoreContext";
 import { store } from "../../store";
-import { setBasketReducer } from "../basket/BasketSlice";
+import { addBasketItemThunk } from "../basket/BasketSlice";
+import { useSelector } from "react-redux";
 
 interface Props {
     product: Product,
 }
 
 const ProductCard = ({product}: Props) => {
+    /*
+    * Using context
+    *
+    *
     // const {setBasket} = useContext(StoreContext); // context
     const [loading, setLoading] = useState(false);
     const handleAddToCart = (productId: number) => {
@@ -24,6 +29,11 @@ const ProductCard = ({product}: Props) => {
             .catch(err => console.log(err))
             .finally(() => setLoading(false))
     }
+    *
+    */
+
+    // using redux tool kit
+    const {status} = useSelector((state: any) => state.basket);
 
     return (
         <Card>
@@ -53,9 +63,10 @@ const ProductCard = ({product}: Props) => {
             </CardContent>
             <CardActions>
                 <LoadingButton
-                    loading={loading}
+                    loading={status.includes('pending' + product.id)}
                     size="small"
-                    onClick={() => handleAddToCart(product.id)}
+                    // onClick={() => handleAddToCart(product.id)} // context
+                    onClick={() => store.dispatch(addBasketItemThunk({productId: product?.id}))}
                 >
                     Add To Cart
                 </LoadingButton>
