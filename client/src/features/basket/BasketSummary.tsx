@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
-import { StoreContext } from "../../context/StoreContext";
+import React from "react";
+// import { StoreContext } from "../../context/StoreContext";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { BasketItem } from "../../model/Basket";
 
 const BasketSummary = () => {
-    const {basket} = useContext(StoreContext);
+    // const {basket} = useContext(StoreContext); // context
+    const {basket} = useSelector((state:any) => state.basket);
 
     const subTotal = basket
-        ? basket.basketItems.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0)
+        ? basket.basketItems.reduce((sum:number, item:BasketItem) => sum + (item.quantity * item.unitPrice), 0)
         : 0;
 
     const deliveryFee = subTotal > 100 ? 0 : 5;
