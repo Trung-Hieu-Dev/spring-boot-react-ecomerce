@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
     AppBar,
     Badge,
@@ -14,7 +14,10 @@ import {
 import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
 import { indigo } from "@mui/material/colors";
-import { StoreContext } from "../context/StoreContext";
+// import { StoreContext } from "../context/StoreContext";
+import { useSelector } from "react-redux";
+import { BasketItem } from "../model/Basket";
+// import { Basket } from "../model/Basket";
 
 interface Props {
     onSetDarkMode: (isDark: boolean) => void,
@@ -101,10 +104,13 @@ const rightLinks = [
 
 
 const Header = ({onSetDarkMode, darkMode}: Props) => {
-    const {basket} = useContext(StoreContext);
+    // const {basket} = useContext(StoreContext); // context
+    const { basket } = useSelector((state: any) => {
+        return state.basket;
+    })
 
     const countItem = basket?.basketItems.reduce(
-        (sum, item) => sum + item.quantity, 0
+        (sum: number, item: BasketItem) => sum + item.quantity, 0
     );
 
     const changeDarkModeHandler = (event: any) => {

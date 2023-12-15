@@ -10,14 +10,14 @@ const StoreProvider = (props: any) => {
             return;
         }
 
-        const basketItems = basket.basketItems;
+        const basketItems = [...basket.basketItems];
 
         const itemIndex = basketItems.findIndex(item => item.productId === productId);
 
         if (itemIndex > -1) {
             basketItems[itemIndex].quantity -= quantity;
             if (basketItems[itemIndex].quantity === 0) {
-                basketItems.slice(itemIndex, 1);
+                basketItems.splice(itemIndex, 1);
             }
             setBasket(prevState => {
                 return {

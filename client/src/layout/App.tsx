@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Catalog from "../features/catalog/Catalog";
 import Header from "./Header";
@@ -14,14 +14,16 @@ import AxiosInterceptor from "../interceptor/AxiosInterceptor";
 import NotFound from "../features/error/NotFound";
 import BasketPage from "../features/basket/BasketPage";
 import { getCookie } from "../util/util";
-import { StoreContext } from "../context/StoreContext";
+// import { StoreContext } from "../context/StoreContext";
 import axios, { AxiosResponse } from "axios";
 import LoadingComponent from "./LoadingComponent";
 import CheckoutPage from "../features/checkout/CheckoutPage";
+import { store } from "../store";
+import { setBasketReducer } from "../features/basket/BasketSlice";
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
-    const {setBasket} = useContext(StoreContext);
+    // const {setBasket} = useContext(StoreContext);
     const [loading, setLoading] = useState<boolean>();
 
     const theme = createTheme({
@@ -35,11 +37,12 @@ function App() {
         if (buyerId) {
             setLoading(true);
             axios.get('/baskets')
-                .then((res:AxiosResponse) => setBasket(res.data))
+                // .then((res:AxiosResponse) => setBasket(res.data)) // use context
+                .then((res:AxiosResponse) => store.dispatch(setBasketReducer(res.data))) // use redux tool kit
                 .catch(err => console.log(err))
                 .finally(() => setLoading(false));
         }
-    }, [setBasket]);
+    }, []);
 
     if (loading) return <LoadingComponent />
 

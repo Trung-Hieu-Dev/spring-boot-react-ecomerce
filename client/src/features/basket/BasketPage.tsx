@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Button,
     Grid,
@@ -12,14 +12,19 @@ import {
     Typography,
 } from "@mui/material";
 import { AddCircle, Delete, RemoveCircle } from "@mui/icons-material";
-import { StoreContext } from "../../context/StoreContext";
+// import { StoreContext } from "../../context/StoreContext";
 import { LoadingButton } from "@mui/lab";
 import axios from "axios";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { store } from "../../store";
+import { removeItemReducer, setBasketReducer } from "./BasketSlice";
 
 const BasketPage = () => {
-    const {basket, setBasket, removeItem} = useContext(StoreContext);
+    // const {basket, setBasket, removeItem} = useContext(StoreContext); // context
+    const {basket} = useSelector((state: any) => state.basket);
+
     const [status, setStatus] = useState<any>({
         loading: false,
         name: '',
@@ -28,14 +33,16 @@ const BasketPage = () => {
 
     useEffect(() => {
         axios.get('/baskets')
-            .then(res => setBasket(res.data))
+            // .then(res => setBasket(res.data)) // context
+            .then(res => store.dispatch(setBasketReducer(res.data)))
             .catch(err => console.log(err))
-    }, [setBasket, basket]);
+    }, [basket]);
 
     const handleAddItem = (productId: number, name: string) => {
         setStatus({loading: true, name: name, id: productId});
         axios.post(`/baskets?productId=${productId}&quantity=${1}`)
-            .then(res => setBasket(res.data))
+            // .then(res => setBasket(res.data)) //context
+            .then(res => store.dispatch(setBasketReducer(res.data)))
             .catch(err => console.log(err))
             .finally(() => setStatus({loading: false, name: name,  id: productId}));
     }
@@ -43,12 +50,15 @@ const BasketPage = () => {
     const handleRemoveItem = (productId: number, quantity: number, name: string) => {
         setStatus({loading: true, name: name, id: productId});
         axios.delete(`/baskets?productId=${productId}&quantity=${quantity}`)
-            .then(() => removeItem(productId, quantity))
+            // .then(() => removeItem(productId, quantity)) // context
+            .then(() => store.dispatch(removeItemReducer({productId, quantity})))
             .catch(err => console.log(err))
             .finally(() => setStatus({loading: false, name: name,  id: productId}));
     }
 
     if (!basket) return <Typography variant='h3'>No basket found..</Typography>
+
+    if (basket.basketItems.length <= 0) return <Typography variant='h3'>Basket is empty</Typography>
 
     return (
         <>
@@ -64,7 +74,7 @@ const BasketPage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {basket.basketItems.map((row) => (
+                        {basket.basketItems.map((row: any) => (
                             <TableRow
                                 key={row.productId}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
