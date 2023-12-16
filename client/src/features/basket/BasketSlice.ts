@@ -84,17 +84,13 @@ export const basketSlice = createSlice({
             }
         });
         builder.addCase(removeBasketItemThunk.fulfilled, (state, action) => {
-            if (!state.basket) {
-                return;
-            }
-
-            const itemIndex = state.basket.basketItems
+            const itemIndex = state.basket!.basketItems
                 .findIndex((item: { productId: number }) => item.productId === action.meta.arg.productId);
 
             if (itemIndex !== undefined && itemIndex > -1) {
-                state.basket.basketItems[itemIndex].quantity -= +action.meta.arg.quantity!;
-                if (state.basket.basketItems[itemIndex].quantity === 0) {
-                    state.basket.basketItems.splice(itemIndex, 1);
+                state.basket!.basketItems[itemIndex].quantity -= +action.meta.arg.quantity!;
+                if (state.basket!.basketItems[itemIndex].quantity === 0) {
+                    state.basket!.basketItems.splice(itemIndex, 1);
                 }
             }
             state.status = 'idle';

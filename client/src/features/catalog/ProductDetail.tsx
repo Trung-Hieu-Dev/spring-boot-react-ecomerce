@@ -11,54 +11,57 @@ import {
     Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { Product } from "../../model/Product";
-// import LoadingComponent from "../../layout/LoadingComponent";
 import { LoadingButton } from "@mui/lab";
-// import { StoreContext } from "../../context/StoreContext";
 import { useSelector } from "react-redux";
 import { BasketItem } from "../../model/Basket";
 import { store } from "../../store";
 import { addBasketItemThunk, removeBasketItemThunk } from "../basket/BasketSlice";
+import { fetchProductByIdThunk, productsAdapter } from "./catalogSlice";
+import LoadingComponent from "../../layout/LoadingComponent";
 
 const ProductDetail = () => {
     let params = useParams();
-    const [product, setProduct] = useState<Product | null>();
+
+    const product = productsAdapter.getSelectors().selectById(
+        store.getState().catalog,
+        +params.productId!
+    )
 
     const {basket, status} = useSelector((state: any) => state.basket);
+    const {productStatus} = useSelector((state:any) => state.catalog);
 
     const basketItem = basket?.basketItems.find((item: BasketItem) => item.productId === product?.id);
-    const [quantity, setQuantity] = useState<number>(0);
+    const [quantity, setQuantity] = useState<number>(basketItem?.quantity | 0);
 
     useEffect(() => {
-        axios.get(`/products/${params.productId}`)
-            .then(response => {
-                    setProduct(response.data);
-                    if (basketItem) {
-                       setQuantity(basketItem!.quantity);
-                    }
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }, [basket, basketItem, params.productId]);
+        if (!product && !basket) {
+            store.dispatch(fetchProductByIdThunk(+params.productId!));
+        }
+    }, [basketItem?.quantity, params.productId, product, basket]);
 
     const handleInputChange = (event: any) => {
         if (quantity > 0) {
             setQuantity(event.target.value)
         }
+        if (quantity === 0) {
+            setQuantity(0)
+        }
     }
 
     const handleUpdateCart = () => {
         let updatedQuantity: number;
-        if (!basket || basketItem!.quantity < quantity) {
-            updatedQuantity = quantity - basketItem!.quantity;
+        if (!basket || basket.basketItems.length >= 0 || basketItem?.quantity < quantity) {
+            if (basketItem?.quantity) {
+                updatedQuantity = quantity - basketItem?.quantity;
+            } else {
+                updatedQuantity = quantity;
+            }
             store.dispatch(addBasketItemThunk({
                 productId: product!.id,
                 quantity: +updatedQuantity
             }))
-        } else if (!basket || basketItem!.quantity > quantity) {
-            updatedQuantity = basketItem!.quantity - quantity;
+        } else if (!basket || basketItem?.quantity > quantity) {
+            updatedQuantity = basketItem?.quantity - quantity | quantity;
             store.dispatch(removeBasketItemThunk({
                 productId: product!.id,
                 quantity: +updatedQuantity
@@ -66,7 +69,10 @@ const ProductDetail = () => {
         }
     }
 
+    if (productStatus === 'pendingFetchProductById') return <LoadingComponent />
+
     if (!product) return <h3>No product found</h3>
+
 
     return (
         <Grid container spacing={2}>

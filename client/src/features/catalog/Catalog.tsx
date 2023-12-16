@@ -14,7 +14,7 @@ const Catalog = () => {
         if (!productLoaded) {
             store.dispatch(fetchProductsThunk());
         }
-    }, [productLoaded]);
+    }, [productLoaded, products]);
 
     if (status === 'pendingFetchProducts') return <LoadingComponent />
 
