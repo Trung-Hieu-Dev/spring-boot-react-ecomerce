@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Product } from "../../model/Product";
+import React, { useEffect } from "react";
 import ProductList from "./ProductList";
-import axios, { AxiosResponse } from "axios";
 import LoadingComponent from "../../layout/LoadingComponent";
+import { fetchProductsThunk, productsAdapter } from "./catalogSlice";
+import { store } from "../../store";
+import { useSelector } from "react-redux";
 
 
 const Catalog = () => {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
+    const products = productsAdapter.getSelectors().selectAll(store.getState().catalog);
+    const {status} = useSelector((state: any) => state.catalog)
 
     useEffect(() => {
-        // fetch("http://localhost:8080/api/products")
-        //     .then(response => response.json())
-        //     .then(data => setProducts(data));
-
-        axios.get('/products')
-            .then((response: AxiosResponse) => setProducts(response.data))
-            .finally(() => setLoading(false))
+        store.dispatch(fetchProductsThunk());
     }, []);
 
-    if (loading) return <LoadingComponent />
+    if (status === 'pendingFetchProducts') return <LoadingComponent />
 
     return (
         <>

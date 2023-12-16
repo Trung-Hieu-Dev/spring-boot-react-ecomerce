@@ -56,7 +56,7 @@ public class BasketController {
                                                   @RequestParam("quantity") int quantity,
                                                   @CookieValue(name = "buyerId", defaultValue = "") String buyerId,
                                                   HttpServletResponse response) {
-        Product product = productRepository.findById(productId).get();
+        Product product = productRepository.findById(productId).orElse(null);
         
         List<Basket> basketList = basketRepository.findByBuyerId(buyerId);
         Basket basket;
