@@ -8,11 +8,13 @@ import { useSelector } from "react-redux";
 
 const Catalog = () => {
     const products = productsAdapter.getSelectors().selectAll(store.getState().catalog);
-    const {status} = useSelector((state: any) => state.catalog)
+    const {status, productLoaded} = useSelector((state: any) => state.catalog)
 
     useEffect(() => {
-        store.dispatch(fetchProductsThunk());
-    }, []);
+        if (!productLoaded) {
+            store.dispatch(fetchProductsThunk());
+        }
+    }, [productLoaded]);
 
     if (status === 'pendingFetchProducts') return <LoadingComponent />
 

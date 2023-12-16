@@ -20,7 +20,8 @@ export const productsAdapter = createEntityAdapter<Product>()
 export const catalogSlice = createSlice({
     name: 'catalog',
     initialState: productsAdapter.getInitialState({
-        status: 'idle'
+        status: 'idle',
+        productLoaded: false
     }),
     reducers: {},
     extraReducers: builder => {
@@ -30,6 +31,7 @@ export const catalogSlice = createSlice({
         builder.addCase(fetchProductsThunk.fulfilled, (state, action) => {
             productsAdapter.setAll(state, action.payload); // get all products with built-in setAll() of EntityAdapter
             state.status = 'idle';
+            state.productLoaded = true;
         });
         builder.addCase(fetchProductsThunk.rejected, (state) => {
             state.status = 'error';
